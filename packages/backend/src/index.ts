@@ -29,6 +29,9 @@ backend.add(import('@backstage/plugin-auth-backend'));
 backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
 // See https://backstage.io/docs/auth/guest/provider
 
+// Keycloak OIDC auth provider module
+backend.add(import('@backstage/plugin-auth-backend-module-oidc-provider'));
+
 // catalog plugin
 backend.add(import('@backstage/plugin-catalog-backend'));
 backend.add(
@@ -50,7 +53,7 @@ backend.add(import('@backstage/plugin-search-backend'));
 
 // search engine
 // See https://backstage.io/docs/features/search/search-engines
-backend.add(import('@backstage/plugin-search-backend-module-pg'));
+// backend.add(import('@backstage/plugin-search-backend-module-pg'));
 
 // search collators
 backend.add(import('@backstage/plugin-search-backend-module-catalog'));

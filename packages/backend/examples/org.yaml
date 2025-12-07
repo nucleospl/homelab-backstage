@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: maksonlee
+spec:
+  profile:
+    displayName: Makson Lee
+    email: maksonlee@maksonlee.com
+  memberOf:
+    - homelab-admins
+ 
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: homelab-admins
+spec:
+  type: team
+  profile:
+    displayName: Homelab Admins
+  children: []
