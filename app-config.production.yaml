@@ -37,6 +37,11 @@ auth:
           resolvers:
             - resolver: emailMatchingUserEntityProfileEmail
 
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+
 catalog:
   # Overrides the default list locations from app-config.yaml as these contain example data.
   # See https://backstage.io/docs/features/software-catalog/#adding-components-to-the-catalog for more details
@@ -99,3 +104,13 @@ catalog:
             set:
               metadata.namespace: default
               spec.type: team
+
+    github:
+      maksonlee:
+        organization: 'maksonlee'
+        catalogPath: '/catalog-info.yaml'
+        filters:
+          repository: '.*'        # all repos under this account/org
+        schedule:
+          frequency: { minutes: 30 }
+          timeout: { minutes: 3 }

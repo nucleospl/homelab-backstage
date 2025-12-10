@@ -37,6 +37,8 @@ backend.add(import('@backstage/plugin-catalog-backend'));
 backend.add(
   import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
 );
+// GitHub discovery provider: auto-import entities from GitHub repos
+backend.add(import('@backstage/plugin-catalog-backend-module-github'));
 
 // LDAP org provider: sync Users & Groups from LDAP into the catalog
 backend.add(import('@backstage/plugin-catalog-backend-module-ldap'));
