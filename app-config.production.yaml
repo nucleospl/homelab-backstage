@@ -11,7 +11,7 @@ backend:
   baseUrl: https://backstage.maksonlee.com
   # The listener can also be expressed as a single <host>:<port> string. In this case we bind to
   # all interfaces, the most permissive setting. The right value depends on your specific deployment.
-  listen: ':7007'
+  listen: ":7007"
 
   # config options: https://node-postgres.com/apis/client
   database:
@@ -89,9 +89,9 @@ catalog:
               filter: "(&(objectClass=inetOrgPerson)(uid=*))"
             map:
               rdn: uid
-              name: uid                # user:default/<uid>
+              name: uid # user:default/<uid>
               displayName: cn
-              email: mail              # used by emailMatchingUserEntityProfileEmail
+              email: mail # used by emailMatchingUserEntityProfileEmail
               # my directory exposes group membership here:
               memberOf: isMemberOf
             set:
@@ -104,7 +104,7 @@ catalog:
               filter: "(objectClass=groupOfNames)"
             map:
               rdn: cn
-              name: cn                 # group:default/<cn>
+              name: cn # group:default/<cn>
               displayName: cn
               description: description
               # group membership list
@@ -116,10 +116,18 @@ catalog:
 
     github:
       maksonlee:
-        organization: 'maksonlee'
-        catalogPath: '/catalog-info.yaml'
+        organization: "maksonlee"
+        catalogPath: "/catalog-info.yaml"
         filters:
-          repository: '.*'        # all repos under this account/org
+          repository: ".*" # all repos under this account/org
         schedule:
           frequency: { minutes: 30 }
           timeout: { minutes: 3 }
+
+proxy:
+  endpoints:
+    "/artifactory":
+      target: https://artifactory.maksonlee.com/artifactory
+      changeOrigin: true
+      headers:
+        Authorization: ${ARTIFACTORY_AUTH_HEADER}

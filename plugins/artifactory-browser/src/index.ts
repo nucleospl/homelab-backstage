@@ -1,1 +1,2 @@
-export { artifactoryBrowserPlugin, ArtifactoryBrowserPage } from './plugin';
+export { artifactoryBrowserApiRef, ArtifactoryBrowserClient } from './api';
+export { EntityArtifactoryBrowserContent } from './components/EntityArtifactoryBrowserContent/EntityArtifactoryBrowserContent';

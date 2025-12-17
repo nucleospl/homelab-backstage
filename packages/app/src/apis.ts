@@ -14,9 +14,15 @@ import {
   createApiFactory,
   createApiRef,
   discoveryApiRef,
+  fetchApiRef,
   oauthRequestApiRef,
 } from '@backstage/core-plugin-api';
 import { OAuth2 } from '@backstage/core-app-api';
+
+import {
+  artifactoryBrowserApiRef,
+  ArtifactoryBrowserClient,
+} from '@internal/backstage-plugin-artifactory-browser';
 
 export const keycloakAuthApiRef: ApiRef<
   OpenIdConnectApi & ProfileInfoApi & BackstageIdentityApi & SessionApi
@@ -59,5 +65,16 @@ export const apis: AnyApiFactory[] = [
           },
         },
       }),
+  }),
+
+  // Artifactory Browser API (frontend plugin -> calls Backstage proxy)
+  createApiFactory({
+    api: artifactoryBrowserApiRef,
+    deps: {
+      discoveryApi: discoveryApiRef,
+      fetchApi: fetchApiRef,
+    },
+    factory: ({ discoveryApi, fetchApi }) =>
+      new ArtifactoryBrowserClient({ discoveryApi, fetchApi }),
   }),
 ];

@@ -63,6 +63,11 @@ import {
   isJenkinsAvailable,
 } from '@backstage-community/plugin-jenkins';
 
+import { EntityArtifactoryBrowserContent } from '@internal/backstage-plugin-artifactory-browser';
+
+const isArtifactoryAvailable = (entity: any) =>
+  Boolean(entity?.metadata?.annotations?.['jfrog.io/artifactory-repo']);
+
 const techdocsContent = (
   <EntityTechdocsContent>
     <TechDocsAddons>
@@ -156,6 +161,14 @@ const serviceEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route
+      path="/artifactory"
+      title="Artifacts"
+      if={isArtifactoryAvailable}
+    >
+      <EntityArtifactoryBrowserContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route
       path="/kubernetes"
       title="Kubernetes"
       if={isKubernetesAvailable}
@@ -202,6 +215,14 @@ const websiteEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route
+      path="/artifactory"
+      title="Artifacts"
+      if={isArtifactoryAvailable}
+    >
+      <EntityArtifactoryBrowserContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route
       path="/kubernetes"
       title="Kubernetes"
       if={isKubernetesAvailable}
@@ -237,6 +258,14 @@ const defaultEntityPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route
+      path="/artifactory"
+      title="Artifacts"
+      if={isArtifactoryAvailable}
+    >
+      <EntityArtifactoryBrowserContent />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/docs" title="Docs">
