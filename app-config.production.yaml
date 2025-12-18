@@ -11,7 +11,7 @@ backend:
   baseUrl: https://backstage.maksonlee.com
   # The listener can also be expressed as a single <host>:<port> string. In this case we bind to
   # all interfaces, the most permissive setting. The right value depends on your specific deployment.
-  listen: "127.0.0.1:7007"
+  listen: '127.0.0.1:7007'
 
   # config options: https://node-postgres.com/apis/client
   database:
@@ -51,6 +51,17 @@ integrations:
     - host: github.com
       token: ${GITHUB_TOKEN}
 
+  gerrit:
+    - host: gerrit.maksonlee.com
+      baseUrl: https://gerrit.maksonlee.com
+
+      # Confirmed from your Gitiles URL
+      gitilesBaseUrl: https://gerrit.maksonlee.com/plugins/gitiles
+
+      # Backstage calls this "password", but you should put your token here
+      username: ${GERRIT_USERNAME}
+      password: ${GERRIT_TOKEN}
+
 catalog:
   # Overrides the default list locations from app-config.yaml as these contain example data.
   # See https://backstage.io/docs/features/software-catalog/#adding-components-to-the-catalog for more details
@@ -74,7 +85,7 @@ catalog:
         target: ldaps://ldap.maksonlee.com
 
         bind:
-          dn: "uid=backstage,ou=system,dc=maksonlee,dc=com"
+          dn: 'uid=backstage,ou=system,dc=maksonlee,dc=com'
           secret: ${LDAP_BIND_PASSWORD}
 
         schedule:
@@ -83,10 +94,10 @@ catalog:
           initialDelay: PT3M
 
         users:
-          - dn: "ou=people,dc=maksonlee,dc=com"
+          - dn: 'ou=people,dc=maksonlee,dc=com'
             options:
               scope: sub
-              filter: "(&(objectClass=inetOrgPerson)(uid=*))"
+              filter: '(&(objectClass=inetOrgPerson)(uid=*))'
             map:
               rdn: uid
               name: uid # user:default/<uid>
@@ -98,10 +109,10 @@ catalog:
               metadata.namespace: default
 
         groups:
-          - dn: "ou=organization,ou=groups,dc=maksonlee,dc=com"
+          - dn: 'ou=organization,ou=groups,dc=maksonlee,dc=com'
             options:
               scope: sub
-              filter: "(objectClass=groupOfNames)"
+              filter: '(objectClass=groupOfNames)'
             map:
               rdn: cn
               name: cn # group:default/<cn>
@@ -116,17 +127,27 @@ catalog:
 
     github:
       maksonlee:
-        organization: "maksonlee"
-        catalogPath: "/catalog-info.yaml"
+        organization: 'maksonlee'
+        catalogPath: '/catalog-info.yaml'
         filters:
-          repository: ".*" # all repos under this account/org
+          repository: '.*' # all repos under this account/org
+        schedule:
+          frequency: { minutes: 30 }
+          timeout: { minutes: 3 }
+
+    gerrit:
+      platformManifestCatalog:
+        host: gerrit.maksonlee.com
+        query: 'state=ACTIVE&prefix=platform/manifest'
+        branch: 'backstage-catalog'
+        catalogPath: 'catalog/products/*.yaml'
         schedule:
           frequency: { minutes: 30 }
           timeout: { minutes: 3 }
 
 proxy:
   endpoints:
-    "/artifactory":
+    '/artifactory':
       target: https://artifactory.maksonlee.com/artifactory
       changeOrigin: true
       headers:
