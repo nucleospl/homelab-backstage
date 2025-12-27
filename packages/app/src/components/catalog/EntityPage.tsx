@@ -1,3 +1,4 @@
+// packages/app/src/components/catalog/EntityPage.tsx
 import { Button, Grid } from '@material-ui/core';
 import {
   EntityApiDefinitionCard,
@@ -35,10 +36,7 @@ import {
 } from '@backstage/plugin-org';
 import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import { EmptyState } from '@backstage/core-components';
-import {
-  Direction,
-  EntityCatalogGraphCard,
-} from '@backstage/plugin-catalog-graph';
+import { Direction, EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
   RELATION_API_CONSUMED_BY,
   RELATION_API_PROVIDED_BY,
@@ -53,20 +51,18 @@ import {
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 
-import {
-  EntityKubernetesContent,
-  isKubernetesAvailable,
-} from '@backstage/plugin-kubernetes';
+import { EntityKubernetesContent, isKubernetesAvailable } from '@backstage/plugin-kubernetes';
 
-import {
-  EntityJenkinsContent,
-  isJenkinsAvailable,
-} from '@backstage-community/plugin-jenkins';
+import { EntityJenkinsContent, isJenkinsAvailable } from '@backstage-community/plugin-jenkins';
 
 import { EntityArtifactoryBrowserContent } from '@internal/backstage-plugin-artifactory-browser';
+import { EntityHarborArtifactsTab } from '@internal/backstage-plugin-harbor';
 
 const isArtifactoryAvailable = (entity: any) =>
   Boolean(entity?.metadata?.annotations?.['jfrog.io/artifactory-repo']);
+
+const isHarborAvailable = (entity: any) =>
+  Boolean(entity?.metadata?.annotations?.['harbor.maksonlee.com/repository']);
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -78,12 +74,10 @@ const techdocsContent = (
 
 const cicdContent = (
   <EntitySwitch>
-    {/* Jenkins: show builds when jenkins.io/job-full-name is present */}
     <EntitySwitch.Case if={isJenkinsAvailable}>
       <EntityJenkinsContent />
     </EntitySwitch.Case>
 
-    {/* Fallback: no CI/CD annotation */}
     <EntitySwitch.Case>
       <EmptyState
         title="No CI/CD available for this entity"
@@ -160,19 +154,15 @@ const serviceEntityPage = (
       {cicdContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      path="/artifactory"
-      title="Artifacts"
-      if={isArtifactoryAvailable}
-    >
+    <EntityLayout.Route path="/artifactory" title="Artifacts" if={isArtifactoryAvailable}>
       <EntityArtifactoryBrowserContent />
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      path="/kubernetes"
-      title="Kubernetes"
-      if={isKubernetesAvailable}
-    >
+    <EntityLayout.Route path="/harbor" title="Harbor" if={isHarborAvailable}>
+      <EntityHarborArtifactsTab />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/kubernetes" title="Kubernetes" if={isKubernetesAvailable}>
       <EntityKubernetesContent />
     </EntityLayout.Route>
 
@@ -214,19 +204,15 @@ const websiteEntityPage = (
       {cicdContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      path="/artifactory"
-      title="Artifacts"
-      if={isArtifactoryAvailable}
-    >
+    <EntityLayout.Route path="/artifactory" title="Artifacts" if={isArtifactoryAvailable}>
       <EntityArtifactoryBrowserContent />
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      path="/kubernetes"
-      title="Kubernetes"
-      if={isKubernetesAvailable}
-    >
+    <EntityLayout.Route path="/harbor" title="Harbor" if={isHarborAvailable}>
+      <EntityHarborArtifactsTab />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/kubernetes" title="Kubernetes" if={isKubernetesAvailable}>
       <EntityKubernetesContent />
     </EntityLayout.Route>
 
@@ -247,25 +233,18 @@ const websiteEntityPage = (
   </EntityLayout>
 );
 
-/**
- * NOTE: This page is designed to work on small screens such as mobile devices.
- * This is based on Material UI Grid. If breakpoints are used, each grid item must set the `xs` prop to a column size or to `true`,
- * since this does not default. If no breakpoints are used, the items will equitably share the available space.
- * https://material-ui.com/components/grid/#basic-grid.
- */
-
 const defaultEntityPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      path="/artifactory"
-      title="Artifacts"
-      if={isArtifactoryAvailable}
-    >
+    <EntityLayout.Route path="/artifactory" title="Artifacts" if={isArtifactoryAvailable}>
       <EntityArtifactoryBrowserContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/harbor" title="Harbor" if={isHarborAvailable}>
+      <EntityHarborArtifactsTab />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/docs" title="Docs">
@@ -276,14 +255,8 @@ const defaultEntityPage = (
 
 const componentPage = (
   <EntitySwitch>
-    <EntitySwitch.Case if={isComponentType('service')}>
-      {serviceEntityPage}
-    </EntitySwitch.Case>
-
-    <EntitySwitch.Case if={isComponentType('website')}>
-      {websiteEntityPage}
-    </EntitySwitch.Case>
-
+    <EntitySwitch.Case if={isComponentType('service')}>{serviceEntityPage}</EntitySwitch.Case>
+    <EntitySwitch.Case if={isComponentType('website')}>{websiteEntityPage}</EntitySwitch.Case>
     <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
   </EntitySwitch>
 );

@@ -4,7 +4,7 @@ app:
 
 organization:
   name: Makson Lee
-  
+
 backend:
   # Note that the baseUrl should be the URL that the browser and other clients
   # should use when communicating with the backend, i.e. it needs to be
@@ -153,3 +153,9 @@ proxy:
       changeOrigin: true
       headers:
         Authorization: ${ARTIFACTORY_AUTH_HEADER}
+    '/harbor':
+      target: https://harbor.maksonlee.com
+      changeOrigin: true
+      secure: true
+      headers:
+        accept: application/json
