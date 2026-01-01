@@ -8,6 +8,8 @@ metadata:
     jenkins.io/job-full-name: backstage/homelab-backstage-main-ci
     backstage.io/techdocs-ref: dir:.
     harbor.maksonlee.com/repository: backstage/homelab-backstage
+    backstage.io/kubernetes-namespace: backstage
+    backstage.io/kubernetes-label-selector: "app in (homelab-backstage,backstage-postgres)"
 
 spec:
   type: website
