@@ -11,6 +11,8 @@ metadata:
     backstage.io/kubernetes-id: homelab-backstage
     backstage.io/kubernetes-namespace: backstage
     backstage.io/kubernetes-cluster: in-cluster
+    argocd/app-name: homelab-backstage
+    argocd/instance-name: main
 spec:
   type: website
   owner: user:default/maksonlee
