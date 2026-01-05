@@ -3,7 +3,6 @@ app:
 
 backend:
   baseUrl: https://backstage-k8s.maksonlee.com
-  listen: ':7007'
   cors:
     origin: https://backstage-k8s.maksonlee.com
     credentials: true
