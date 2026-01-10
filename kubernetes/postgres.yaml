@@ -24,6 +24,8 @@ metadata:
   labels:
     app: backstage-postgres
     backstage.io/kubernetes-id: homelab-backstage
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
 spec:
   serviceName: backstage-postgres
   replicas: 1
