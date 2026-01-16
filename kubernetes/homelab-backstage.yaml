@@ -37,8 +37,14 @@ spec:
           ports:
             - name: http
               containerPort: 7007
-            - name: metrics
-              containerPort: 9464
+
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: homelab-backstage
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.namespace=backstage
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://lgtm-alloy.observability.svc:4318
 
           envFrom:
             - secretRef:
@@ -86,9 +92,6 @@ spec:
     - name: http
       port: 80
       targetPort: 7007
-    - name: metrics
-      port: 9464
-      targetPort: 9464
 
 ---
 apiVersion: networking.k8s.io/v1

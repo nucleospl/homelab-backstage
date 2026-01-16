@@ -5,16 +5,29 @@ if (isMainThread) {
   const {
     getNodeAutoInstrumentations,
   } = require('@opentelemetry/auto-instrumentations-node');
-  const { PrometheusExporter } = require('@opentelemetry/exporter-prometheus');
 
-  const prometheusExporter = new PrometheusExporter({
-    host: '0.0.0.0',
-    port: 9464,
-    endpoint: '/metrics',
+  const {
+    OTLPTraceExporter,
+  } = require('@opentelemetry/exporter-trace-otlp-http');
+  const {
+    OTLPMetricExporter,
+  } = require('@opentelemetry/exporter-metrics-otlp-http');
+  const {
+    PeriodicExportingMetricReader,
+  } = require('@opentelemetry/sdk-metrics');
+
+  // OTLP exporters read standard OTEL_* env vars (endpoint, headers, etc.)
+  const traceExporter = new OTLPTraceExporter();
+  const metricExporter = new OTLPMetricExporter();
+
+  const metricReader = new PeriodicExportingMetricReader({
+    exporter: metricExporter,
+    exportIntervalMillis: 60000,
   });
 
   const sdk = new NodeSDK({
-    metricReader: prometheusExporter,
+    traceExporter,
+    metricReader,
     instrumentations: [getNodeAutoInstrumentations()],
   });
 
