@@ -6,8 +6,6 @@ metadata:
   labels:
     app: homelab-backstage
     backstage.io/kubernetes-id: homelab-backstage
-  annotations:
-    argocd.argoproj.io/sync-wave: '0'
 spec:
   replicas: 1
   selector:
@@ -32,20 +30,11 @@ spec:
               done
       containers:
         - name: homelab-backstage
-          image: harbor.maksonlee.com/backstage/homelab-backstage:test
+          image: harbor.nucleos.net.pl/backstage/homelab-backstage:latest
           imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 7007
-
-          env:
-            - name: OTEL_SERVICE_NAME
-              value: homelab-backstage
-            - name: OTEL_RESOURCE_ATTRIBUTES
-              value: service.namespace=backstage
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: http://lgtm-alloy.observability.svc:4318
-
           envFrom:
             - secretRef:
                 name: backstage-env
@@ -57,11 +46,8 @@ spec:
               subPath: app-config.k8s.yaml
 
           # Start Backstage with your existing configs + the k8s override
-          # IMPORTANT: add --require ./instrumentation.js because this YAML overrides Dockerfile CMD.
           command: ['node']
           args:
-            - '--require'
-            - './instrumentation.js'
             - 'packages/backend'
             - '--config'
             - 'app-config.yaml'
@@ -102,10 +88,20 @@ metadata:
   labels:
     app: homelab-backstage
     backstage.io/kubernetes-id: homelab-backstage
+  annotations:
+    cert-manager.io/cluster-issuer: le-prod
+    external-dns.alpha.kubernetes.io/hostname: backstage.nucleos.net.pl
+    external-dns.alpha.kubernetes.io/ttl: "120"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - backstage.nucleos.net.pl
+      secretName: backstage-tls
   rules:
-    - host: backstage-k8s.maksonlee.com
+    - host: backstage.nucleos.net.pl
       http:
         paths:
           - path: /

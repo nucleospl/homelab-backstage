@@ -67,10 +67,4 @@ COPY --chown=node:node examples ./examples
 COPY --chown=node:node packages/backend/dist/bundle.tar.gz app-config*.yaml ./
 RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
-# Copy OpenTelemetry instrumentation entrypoint (Prometheus exporter, etc.)
-# NOTE: Your .dockerignore must whitelist this file:
-#   !packages/backend/src/instrumentation.js
-COPY --chown=node:node packages/backend/src/instrumentation.js ./instrumentation.js
-
-# Load instrumentation before the backend starts (Backstage OpenTelemetry tutorial pattern)
-CMD ["node", "--require", "./instrumentation.js", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
+CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]

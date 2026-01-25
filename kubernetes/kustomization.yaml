@@ -7,9 +7,6 @@ resources:
   - postgres.yaml
   - homelab-backstage.yaml
   - backstage-k8s-rbac.yaml
-  - eso-vault-sa.yaml
-  - secretstore-vault-backstage.yaml
-  - externalsecret-backstage-env.yaml
 
 generatorOptions:
   disableNameSuffixHash: false

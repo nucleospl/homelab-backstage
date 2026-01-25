@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/maksonlee/homelab-backstage.git
+    repoURL: https://github.com/nucleospl/homelab-backstage.git
     targetRevision: main
     path: kubernetes
 

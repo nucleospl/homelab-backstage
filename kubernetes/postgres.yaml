@@ -24,8 +24,6 @@ metadata:
   labels:
     app: backstage-postgres
     backstage.io/kubernetes-id: homelab-backstage
-  annotations:
-    argocd.argoproj.io/sync-wave: '0'
 spec:
   serviceName: backstage-postgres
   replicas: 1
@@ -50,14 +48,20 @@ spec:
 
           env:
             - name: POSTGRES_USER
-              value: backstage
-            - name: POSTGRES_DB
-              value: backstage
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-env
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: backstage-env
                   key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-env
+                  key: POSTGRES_DB
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
 

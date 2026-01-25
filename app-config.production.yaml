@@ -1,77 +1,177 @@
 app:
-  baseUrl: https://backstage.maksonlee.com
+  # Should be the same as backend.baseUrl when using the `app-backend` plugin.
+  baseUrl: https://backstage.nucleos.net.pl
+
+organization:
+  name: Nucleos
 
 backend:
-  baseUrl: https://backstage.maksonlee.com
-  cors:
-    origin: https://backstage.maksonlee.com
-    credentials: true
+  # Note that the baseUrl should be the URL that the browser and other clients
+  # should use when communicating with the backend, i.e. it needs to be
+  # reachable not just from within the backend host, but from all of your
+  # callers. When its value is "http://localhost:7007", it's strictly private
+  # and can't be reached by others.
+  baseUrl: https://backstage.nucleos.net.pl
+  # The listener can also be expressed as a single <host>:<port> string. In this case we bind to
+  # all interfaces, the most permissive setting. The right value depends on your specific deployment.
+  listen: ':7007'
 
+  # config options: https://node-postgres.com/apis/client
   database:
     client: pg
+
+    # Recommended: one database, per-plugin schemas
     pluginDivisionMode: schema
+
     connection:
-      host: backstage.maksonlee.com
-      port: 5432
-      user: backstage
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
       password: ${POSTGRES_PASSWORD}
-      database: backstage
+      database: ${POSTGRES_DB}
+
+jenkins:
+  instances:
+    - name: default
+      baseUrl: https://jks.nucleos.net.pl
+      username: ${JENKINS_USERNAME}
+      apiKey: ${JENKINS_API_TOKEN}
+      projectCountLimit: 250
+      # crumbIssuer: true    # uncomment if your Jenkins requires CSRF crumbs
 
 auth:
   environment: production
   session:
     secret: ${AUTH_SESSION_SECRET}
   providers:
-    guest: null
-    oidc:
+    github:
       production:
-        metadataUrl: https://keycloak.maksonlee.com/realms/maksonlee.com/.well-known/openid-configuration
-        clientId: backstage
-        clientSecret: ${AUTH_OIDC_CLIENT_SECRET}
-        additionalScopes:
-          - profile
-          - email
-        prompt: auto
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
         signIn:
           resolvers:
-            - resolver: emailMatchingUserEntityProfileEmail
+            - resolver: usernameMatchingUserEntityName
+
+    # oidc:
+    #   production:
+    #     metadataUrl: https://keycloak.nucleos.net.pl/realms/nucleos.net.pl/.well-known/openid-configuration
+    #     clientId: ${AUTH_OIDC_CLIENT_ID}
+    #     clientSecret: ${AUTH_OIDC_CLIENT_SECRET}
+    #     additionalScopes:
+    #       - profile
+    #       - email
+    #     prompt: auto
+    #     signIn:
+    #       resolvers:
+    #         - resolver: emailMatchingUserEntityProfileEmail
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+
+  # gerrit:
+  #   - host: gerrit.nucleos.net.pl
+  #     baseUrl: https://gerrit.nucleos.net.pl
+
+  #     # Confirmed from your Gitiles URL
+  #     gitilesBaseUrl: https://gerrit.nucleos.net.plplugins/gitiles
+
+  #     # Backstage calls this "password", but you should put your token here
+  #     username: ${GERRIT_USERNAME}
+  #     password: ${GERRIT_TOKEN}
 
 catalog:
+  # Overrides the default list locations from app-config.yaml as these contain example data.
+  # See https://backstage.io/docs/features/software-catalog/#adding-components-to-the-catalog for more details
+  # on how to get entities into the catalog.
+  locations: []
+
   providers:
-    ldapOrg:
-      default:
-        target: ldaps://ldap.maksonlee.com
-        bind:
-          dn: 'uid=backstage,ou=system,dc=maksonlee,dc=com'
-          secret: ${LDAP_BIND_PASSWORD}
+    # ldapOrg:
+    #   default:
+    #     # My LDAP server (LDAPS recommended in real use)
+    #     target: ldaps://ldap.nucleos.net.pl
+    #
+    #     bind:
+    #       dn: 'uid=backstage,ou=system,dc=nucleos,dc=net,dc=pl'
+    #       secret: ${LDAP_BIND_PASSWORD}
+    #
+    #     schedule:
+    #       frequency: PT1H
+    #       timeout: PT15M
+    #       initialDelay: PT3M
+    #
+    #     users:
+    #       - dn: 'ou=people,dc=nucleos,dc=net,dc=pl'
+    #         options:
+    #           scope: sub
+    #           filter: '(&(objectClass=inetOrgPerson)(uid=*))'
+    #         map:
+    #           rdn: uid
+    #           name: uid # user:default/<uid>
+    #           displayName: cn
+    #           email: mail # used by emailMatchingUserEntityProfileEmail
+    #           # my directory exposes group membership here:
+    #           memberOf: isMemberOf
+    #         set:
+    #           metadata.namespace: default
+    #
+    #     groups:
+    #       - dn: 'ou=organization,ou=groups,dc=nucleos,dc=net,dc=pl'
+    #         options:
+    #           scope: sub
+    #           filter: '(objectClass=groupOfNames)'
+    #         map:
+    #           rdn: cn
+    #           name: cn # group:default/<cn>
+    #           displayName: cn
+    #           description: description
+    #           # group membership list
+    #           members: member
+    #           # I'm not using nested groups yet, so memberOf is optional here
+    #         set:
+    #           metadata.namespace: default
+    #           spec.type: team
+
+    github:
+      nucleospl:
+        organization: 'nucleospl'
+        catalogPath: '/catalog-info.yaml'
+        filters:
+          repository: '.*' # all repos under this account/org
         schedule:
-          frequency: PT1H
-          timeout: PT15M
-          initialDelay: PT3M
-        users:
-          - dn: 'ou=people,dc=maksonlee,dc=com'
-            options:
-              scope: sub
-              filter: '(&(objectClass=inetOrgPerson)(uid=*))'
-            map:
-              rdn: uid
-              name: uid
-              displayName: cn
-              email: mail
-              memberOf: isMemberOf
-            set:
-              metadata.namespace: default
-        groups:
-          - dn: 'ou=organization,ou=groups,dc=maksonlee,dc=com'
-            options:
-              scope: sub
-              filter: '(objectClass=groupOfNames)'
-            map:
-              rdn: cn
-              name: cn
-              displayName: cn
-              description: description
-              members: member
-            set:
-              metadata.namespace: default
-              spec.type: team
+          frequency: { minutes: 30 }
+          timeout: { minutes: 3 }
+
+    # gerrit:
+    #   platformManifestCatalog:
+    #     host: gerrit.nucleos.net.pl
+    #     query: 'state=ACTIVE&prefix=platform/manifest'
+    #     branch: 'backstage-catalog'
+    #     catalogPath: 'catalog/products/*.yaml'
+    #     schedule:
+    #       frequency: { minutes: 30 }
+    #       timeout: { minutes: 3 }
+
+proxy:
+  endpoints:
+    # '/artifactory':
+    #   target: https://artifactory.nucleos.net.pl/artifactory
+    #   changeOrigin: true
+    #   headers:
+    #     Authorization: ${ARTIFACTORY_AUTH_HEADER}
+    '/harbor':
+      target: https://harbor.nucleos.net.pl
+      changeOrigin: true
+      secure: true
+      headers:
+        accept: application/json
+
+argocd:
+  appLocatorMethods:
+    - type: config
+      instances:
+        - name: main
+          url: https://argocd.nucleos.net.pl
+          token: ${ARGOCD_AUTH_TOKEN}

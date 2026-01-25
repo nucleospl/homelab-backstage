@@ -8,11 +8,6 @@ COPY .yarnrc.yml ./
 
 COPY packages packages
 
-# IMPORTANT:
-# We delete package sources below, but we need this file later in the final image.
-# Copy it out now before the "find ... rm -rf" runs.
-COPY packages/backend/src/instrumentation.js /app/instrumentation.js
-
 # Comment this out if you don't have any internal plugins
 COPY plugins plugins
 
@@ -109,14 +104,10 @@ COPY --chown=node:node app-config*.yaml ./
 # This will include the examples, if you don't need these simply remove this line
 COPY --chown=node:node examples ./examples
 
-# Copy OpenTelemetry instrumentation entrypoint into WORKDIR (/app)
-COPY --from=packages --chown=node:node /app/instrumentation.js ./instrumentation.js
-
 # This switches many Node.js dependencies to production mode.
 ENV NODE_ENV=production
 
 # This disables node snapshot for Node 20 to work with the Scaffolder
 ENV NODE_OPTIONS="--no-node-snapshot"
 
-# Load instrumentation before the backend starts
-CMD ["node", "--require", "./instrumentation.js", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
+CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]

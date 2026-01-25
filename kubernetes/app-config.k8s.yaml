@@ -1,21 +1,12 @@
 app:
-  baseUrl: https://backstage-k8s.maksonlee.com
+  baseUrl: https://backstage.nucleos.net.pl
 
 backend:
-  baseUrl: https://backstage-k8s.maksonlee.com
+  baseUrl: https://backstage.nucleos.net.pl
+  listen: ':7007'
   cors:
-    origin: https://backstage-k8s.maksonlee.com
+    origin: https://backstage.nucleos.net.pl
     credentials: true
-
-  database:
-    connection:
-      host: backstage-postgres
-
-auth:
-  providers:
-    oidc:
-      production:
-        clientId: backstage-k8s
 
 kubernetes:
   serviceLocatorMethod:

@@ -17,7 +17,7 @@ spec:
         - alias: backstage
 
           # Harbor project repo (avoid library/)
-          imageName: harbor.maksonlee.com/backstage/homelab-backstage:test
+          imageName: harbor.nucleos.net.pl/backstage/homelab-backstage:test
 
           commonUpdateSettings:
             updateStrategy: digest
@@ -25,4 +25,4 @@ spec:
           # Must match the image identifier used in your manifests (without tag)
           manifestTargets:
             kustomize:
-              name: harbor.maksonlee.com/backstage/homelab-backstage
+              name: harbor.nucleos.net.pl/backstage/homelab-backstage
