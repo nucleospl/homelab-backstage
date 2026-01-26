@@ -156,11 +156,11 @@ catalog:
 
 proxy:
   endpoints:
-    # '/artifactory':
-    #   target: https://artifactory.nucleos.net.pl/artifactory
-    #   changeOrigin: true
-    #   headers:
-    #     Authorization: ${ARTIFACTORY_AUTH_HEADER}
+    '/artifactory':
+      target: https://artifactory.nucleos.net.pl/artifactory
+      changeOrigin: true
+      headers:
+        Authorization: ${ARTIFACTORY_AUTH_HEADER}
     '/harbor':
       target: https://harbor.nucleos.net.pl
       changeOrigin: true

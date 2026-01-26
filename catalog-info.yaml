@@ -4,10 +4,10 @@ metadata:
   name: homelab-backstage
   description: Homelab Backstage application.
   annotations:
-    github.com/project-slug: maksonlee/homelab-backstage
-    jenkins.io/job-full-name: backstage/homelab-backstage-main-ci
+    github.com/project-slug: nucleospl/homelab-backstage
+    # jenkins.io/job-full-name: backstage/homelab-backstage-main-ci
     backstage.io/techdocs-ref: dir:.
-    harbor.maksonlee.com/repository: backstage/homelab-backstage
+    harbor.nucleos.net.pl/repository: backstage/homelab-backstage
     backstage.io/kubernetes-id: homelab-backstage
     backstage.io/kubernetes-namespace: backstage
     backstage.io/kubernetes-cluster: in-cluster
@@ -15,5 +15,5 @@ metadata:
     argocd/instance-name: main
 spec:
   type: website
-  owner: user:default/maksonlee
+  owner: user:default/guest
   lifecycle: production
