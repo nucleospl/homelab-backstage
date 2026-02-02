@@ -20,7 +20,8 @@ import {
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
-import { apis, keycloakAuthApiRef } from './apis';
+import { apis } from './apis';
+import { githubAuthApiRef } from '@backstage/core-plugin-api';
 import { entityPage } from './components/catalog/EntityPage';
 import { searchPage } from './components/search/SearchPage';
 import { Root } from './components/Root';
@@ -64,10 +65,10 @@ const app = createApp({
         auto
         providers={[
           {
-            id: 'keycloak-auth-provider',
-            title: 'Keycloak',
-            message: 'Sign in using Keycloak',
-            apiRef: keycloakAuthApiRef,
+            id: 'github-auth-provider',
+            title: 'GitHub',
+            message: 'Sign in using GitHub',
+            apiRef: githubAuthApiRef,
           },
         ]}
       />
