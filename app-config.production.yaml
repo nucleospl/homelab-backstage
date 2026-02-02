@@ -173,6 +173,7 @@ proxy:
       secure: true
       headers:
         accept: application/json
+        Authorization: ${HARBOR_AUTH_HEADER}
 
 argocd:
   appLocatorMethods:
