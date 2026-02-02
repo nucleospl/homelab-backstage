@@ -7,7 +7,7 @@ metadata:
     github.com/project-slug: nucleospl/homelab-backstage
     # jenkins.io/job-full-name: backstage/homelab-backstage-main-ci
     backstage.io/techdocs-ref: dir:.
-    harbor.nucleos.net.pl/repository: backstage/homelab-backstage
+    harbor.maksonlee.com/repository: backstage/homelab-backstage
     backstage.io/kubernetes-id: homelab-backstage
     backstage.io/kubernetes-namespace: backstage
     backstage.io/kubernetes-cluster: in-cluster
