@@ -13,7 +13,7 @@ metadata:
     backstage.io/kubernetes-cluster: in-cluster
     argocd/app-name: homelab-backstage
     argocd/instance-name: main
-    jfrog.io/artifactory-repo: backstage
+    jfrog.io/artifactory-repo: homelab-backstage
 spec:
   type: website
   owner: user:default/guest
