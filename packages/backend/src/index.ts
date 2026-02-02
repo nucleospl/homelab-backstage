@@ -72,8 +72,8 @@ backend.add(import('@backstage/plugin-search-backend-module-techdocs'));
 // kubernetes plugin
 backend.add(import('@backstage/plugin-kubernetes-backend'));
 
-// Jenkins CI/CD plugin
-backend.add(import('@backstage-community/plugin-jenkins-backend'));
+// Jenkins CI/CD plugin (disabled - requires JENKINS_USERNAME and JENKINS_API_TOKEN)
+// backend.add(import('@backstage-community/plugin-jenkins-backend'));
 
 // notifications and signals plugins
 backend.add(import('@backstage/plugin-notifications-backend'));
