@@ -30,8 +30,8 @@ backend.add(import('@backstage/plugin-auth-backend'));
 backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
 // See https://backstage.io/docs/auth/guest/provider
 
-// Keycloak OIDC auth provider module
-backend.add(import('@backstage/plugin-auth-backend-module-oidc-provider'));
+// GitHub auth provider
+backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
 
 // catalog plugin
 backend.add(import('@backstage/plugin-catalog-backend'));
